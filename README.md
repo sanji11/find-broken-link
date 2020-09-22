@@ -7,3 +7,5 @@ After installing,
 type `fbl -f [path to the file]`
 - to check broken link directy for a url
 type `fbl -u [url]`  
+
+The END---goodbye!
