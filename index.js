@@ -69,11 +69,8 @@ function checkUrlAndReport(url){
                 console.log(chalk.grey.bold("Unknown ===> " + response.url));
             }
         }).catch(function (err){
-        
             console.log(chalk.blue.bold("Not exist ===> " + url));
         })    
-                
-        
 }
 
 function readFile(fileName){
