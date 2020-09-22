@@ -1,0 +1,391 @@
+################# Failing Feeds Commented Out [Start] #################
+
+#Feed excluded due to getaddrinfo ENOTFOUND s-aleinikov.blog.ca s-aleinikov.blog.ca:80
+#[http://s-aleinikov.blog.ca/feed/atom/posts/]
+#name=Sergey Aleinikov
+#Feed excluded due to getaddrinfo ENOTFOUND ejtorre.blog.ca ejtorre.blog.ca:80
+#[http://ejtorre.blog.ca/feed/rss2/posts/]
+#name=Eugene Torre
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND rickeyre.ca rickeyre.ca:80
+#[http://rickeyre.ca/open-source-feed.xml]
+#name=Rick Eyre
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://tea.cesaroliveira.net/archives/tag/seneca/feed]
+#name=Cesar Oliveira
+
+#Feed excluded due to getaddrinfo ENOTFOUND blog.marcussaad.com blog.marcussaad.com:80
+#[http://blog.marcussaad.com/?feed=rss2&lang=en]
+#name=Marcus Saad
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND matthewtorrance.com matthewtorrance.com:80
+#[http://matthewtorrance.com/category/osd/feed/]
+#name=Matthew Torrance
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND hesam-chobanlou.com hesam-chobanlou.com:80
+#[http://hesam-chobanlou.com/feed/atom.php]
+#name=Hesam Chobanlou
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://zadkielm.blogspot.com/feeds/posts/default/-/open%20source]
+#name=Ezadkiel Marbella
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://travisrawn.blogspot.com/feeds/posts/default]
+#name=Travis Rawn
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://dev-blog.zerogin.com/category/opensource/feed/]
+#name=Tom Wisniewski (t0mmyw)
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://peter.sykokillers.com/category/open-source/feed/]
+#name=Peter Chan
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND http http:80
+#[http://http://stephenruthland.wordpress.com/feed/]
+#name=Stephen Ruthland
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND main.justinflowers.ca main.justinflowers.ca:80
+#[http://main.justinflowers.ca/web/wordpress/?cat=2&feed=rss2]
+#name=Justin Flowers
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND http http:80
+#[http://http://hhashimi3.wordpress.com/feed/]
+#name=Hamid Hashimi
+
+
+#Feed excluded due to getaddrinfo ENOTFOUND dps909.defilippis.ca dps909.defilippis.ca:443
+#[https://dps909.defilippis.ca/index.php/feed/]
+#name=Steven De Filippis
+
+
+[https://jadach1201231188.wordpress.com/feed/]
+name=Jacob Adach
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://farhadnorouzi.blogspot.com/feeds/posts/default]
+#name=Farhad Norouzi
+
+
+#Feed excluded due to Request failed with status code 403
+#[http://blog.leapproject.ca/feed/]
+#name=LEAP Project
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://techtalkwithaaron.blogspot.com/feeds/posts/default/Open%20Source]
+#name=Aaron Scott
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://msousa3.blogspot.com/feeds/posts/default]
+#name=Michael Sousa
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://sjhan5.blogspot.ca/feeds/posts/default/]
+#name=Suk-Joong Han
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://aaronrey15.blogspot.com/feeds/posts/default/-/Seneca]
+#name=Aaron Chan
+
+
+#Feed excluded due to Request failed with status code 503
+#[http://www.danepstein.ca/category/open-source/feed]
+#name=Dan Epstein
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://amartinencosbr600.blogspot.com/feeds/posts/default]
+#name=Andrei Martinenco
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://sbr600.tumblr.com/rss]
+#name=Daniel Delidjakov
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://harjinderv.tumblr.com/tagged/Open_Source/rss]
+#name=Harjinder Virdi
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://www.bpcoding.com/blog/category/spo/]
+#name=Bruno Pereira
+
+
+#Feed excluded due to Hostname/IP does not match certificate's altnames: Host: assmith2017_.blogspot.ca. is not in the cert's altnames: DNS:*.googleusercontent.com, DNS:*.apps.googleusercontent.com, DNS:*.appspot.com.storage.googleapis.com, DNS:*.audiobook-additional-material-staging.googleusercontent.com, DNS:*.audiobook-additional-material.googleusercontent.com, DNS:*.blogspot.com, DNS:*.bp.blogspot.com, DNS:*.commondatastorage.googleapis.com, DNS:*.content-storage-download.googleapis.com, DNS:*.content-storage-upload.googleapis.com, DNS:*.content-storage.googleapis.com, DNS:*.doubleclickusercontent.com, DNS:*.ggpht.com, DNS:*.googledrive.com, DNS:*.googlesyndication.com, DNS:*.googleweblight.com, DNS:*.local.amp4mail.googleusercontent.com, DNS:*.playground-internal.amp4mail.googleusercontent.com, DNS:*.playground.amp4mail.googleusercontent.com, DNS:*.prod.amp4mail.googleusercontent.com, DNS:*.safenup.googleusercontent.com, DNS:*.sandbox.googleusercontent.com, DNS:*.storage-download.googleapis.com, DNS:*.storage-upload.googleapis.com, DNS:*.storage.googleapis.com, DNS:*.storage.select.googleapis.com, DNS:*.translate.goog, DNS:blogspot.com, DNS:bp.blogspot.com, DNS:commondatastorage.googleapis.com, DNS:doubleclickusercontent.com, DNS:ggpht.com, DNS:googledrive.com, DNS:googleusercontent.com, DNS:googleweblight.com, DNS:manifest.lh3.googleusercontent.com, DNS:manifest.lh3.photos.google.com, DNS:static.panoramio.com.storage.googleapis.com, DNS:storage.googleapis.com, DNS:storage.select.googleapis.com, DNS:translate.goog, DNS:unfiltered.news
+#[https://assmith2017_.blogspot.ca/feeds/posts/default]
+#name=Azusa Shimazaki
+
+
+#Feed excluded due to unable to verify the first certificate
+#[http://hcoelho.com/blog/feed]
+#name=Henrique Coelho
+
+
+#Feed excluded due to Request failed with status code 404
+#[https://jalemansite.wordpress.com/category/feed/]
+#name=Johann Aleman
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://sinomai.wordpress.com/category/planet-cdot/feed/]
+#name=Matt Jang
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://hzahoori.wordpress.com/category/open-source/feed]
+#name=Habib Zahoori
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://vprasanth.com/blog/archives/category/spo600-2/feed]
+#name=Prasanth Vaaheeswaran
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://rlawrence5.wordpress.com/feed/]
+#name=Ryan Lawrence
+
+
+#Feed excluded due to Request failed with status code 404
+#[https://apspo600.blogspot.com/feed/posts/default/]
+#name=Atilla Puskas
+
+
+#Feed excluded due to Request failed with status code 410
+#[https://bapetov.wordpress.com/category/opensourcedps909/feed]
+#name=Bakytzhan Apetov
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://adsantokhi.wordpress.com/category/open-source/feed]
+#name=Anil Santokhi
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://rawkamatic.github.io/opensourcefeed]
+#name=Hunter Jansen
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://ayufidin.blogspot.ca/feeds/posts/default]
+#name=Alon Yufidin
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://kevinpaiva.com/category/spo600/feed/]
+#name=Kevin Manuel Paiva
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://dboddie46.wordpress.com/category/SBR600A/feed/]
+#name=Derrick Boddie
+
+
+#Feed excluded due to Request failed with status code 404
+#[http://liandrew.ca/feed.opensource.xml]
+#name=Andrew Li
+
+
+#Feed excluded due to Client network socket disconnected before secure TLS connection was established
+#[https://fahadkarar1.wordpress.com/category/spo600/feed/]
+#name=Fahad Karar
+
+
+#Feed excluded due to Client network socket disconnected before secure TLS connection was established
+#[http://jgoguette.wordpress.com/category/open-source/feed]
+#name=Jerry Goguette
+
+
+#Feed excluded due to connect ECONNREFUSED 104.200.30.7:80
+#[http://dokidoki.duckdns.org/tag/polished/rss/]
+#name=Kenny Nguyen
+
+
+#Feed excluded due to Client network socket disconnected before secure TLS connection was established
+#[http://tjduavis.wordpress.com/category/open-source/feed/]
+#name=Timothy Duavis
+
+
+#Feed excluded due to Client network socket disconnected before secure TLS connection was established
+#[http://selmys.wordpress.com/category/opensource/feed]
+#name=John Selmys
+
+
+#Feed excluded due to Request failed with status code 410
+#[http://cldenobrega.wordpress.com/category/open-source/feed/]
+#name=Crystal de Nobrega (cldenobrega)
+
+
+#Feed excluded due to Request failed with status code 404
+#[https://www.jielselmani.me/blog?category=Open+Source&format=rss]
+#name=Jiel Selmani
+
+
+#Feed excluded due to Request failed with status code 410
+#[https://naperkovskiy.wordpress.com/feed/]
+#name=Igor Naperkovskiy
+
+
+
+################# Failing Feeds Commented Out [End] #################
+
+
+##### pre-2020-start #######
+
+[https://medium.com/@akakakak668]
+name=Ryeoeul Ko
+
+[https://abdulosd.blogspot.com/feeds/posts/default?alt=rss]
+name=Abdul Abdi
+
+[http://palak-chawla.blogspot.com/feeds/posts/default?alt=rss]
+name=Palak Chawla
+
+[http://zjjiang2.blogspot.com/feeds/posts/default/-/categorylabel?alt=rss]
+name=ZongJin (Jason) Jiang
+
+[https://dev.to/feed/phast184]
+name=Thanh Tien Phat Nguyen
+
+[https://hyunjijanelee.blogspot.com/feeds/posts/default/-/Open-Source?alt=rss]
+name=Hyunji Lee
+
+[https://osdnathanp.wordpress.com/feed/]
+name=Nathan Pang
+
+[https://medium.com/feed/@random4900]
+name=Alexi Joseph
+
+[https://medium.com/feed/@danishali_mussa]
+name=Danish Mussa
+
+[https://www.abuzayed.ca/my-blog/osd600/category/open-source/feed/]
+name=Abu Zayed Kazi
+
+[https://joelazwaros.blogspot.com/feeds/posts/default?alt=rss]
+name=Joel Azwar
+
+[https://mintaedotblog.wordpress.com/category/open-source/feed/]
+name=Mintae Kim
+
+[https://dev.to/feed/fluentinstroll]
+name=Raymond Rambo
+
+[http://weihuangosd.blogspot.com/feeds/posts/default/-/categorylabel?alt=rss]
+name=Wei Huang
+
+[https://sostellajung.blogspot.com/feeds/posts/default/-/openSource?alt=rss]
+name=Stella Jung
+
+[https://nesabyte.wordpress.com/feed/]
+name=Nesa Bertanico
+
+[https://tjstavern24697521.wordpress.com/feed]
+name=TJ LeBlanc
+
+[https://xingpancanada.blogspot.com/feeds/posts/default/-/open%20source?alt=rss]
+name=Xing Pan
+
+[https://dev.to/feed/slaterslater/]
+name=Anthony Slater
+
+[https://medium.com/feed/@roycedev]
+name=Royce Ayroso-Ong
+
+[https://dev.to/feed/yuanleemidori]
+name=Yuan-Hsi Lee
+
+[https://medium.com/feed/@moho472]
+name=Mohammed Ahmed
+
+[https://badalsarkar.ca/blog-opensource/feed.xml]
+name=Badal Sarkar
+
+[https://dev.to/feed/bpan2]
+name=Bing Pan
+
+[https://ryudeveloper.wordpress.com/category/open-source/feed/]
+name=Roger Yu
+
+[https://abhaseen.github.io/feed.xml]
+name=Andre Bhaseen
+
+[https://kmchan12.wordpress.com/category/open-source/feed/]
+name=Kam Chan
+
+[https://dev.to/feed/isabellaliu77/#opensource]
+name=Isabella Liu
+
+[http://gonewiththewind1982.blogspot.com/feeds/posts/default/-/Open%20Source?alt=rss]
+name=Leon Li
+
+[http://markham2020.blogspot.com/feeds/posts/default/-/open%20source?alt=rss]
+name=Hongbin Li
+
+[https://dev.to/feed/isabellaliu77]
+name=Isabella Liu
+
+[https://medium.com/feed/@rabautista]
+name=Ruby Anne Bautista
+
+[https://dev.to/feed/niazulhaque]
+name=Mohammed Niaz ul Haque
+
+[https://jongwon-jang.blogspot.com/feeds/posts/default?alt=rss]
+name=Jongwon Jang
+
+[https://jyangblogs.wordpress.com/category/open-source/feed/]
+name=Jie Yang
+
+[https://dev.to/feed/mljbrackett]
+name=Michael Brackett
+
+[https://fgaervgedwg.blogspot.com/feeds/posts/default?alt=rss]
+name=Tonghuyn Yi
+
+[https://dev.to/feed/hyperthd]
+name=Abdulbasid Guled
+
+[https://dev.to/feed/strawberries73]
+name=Jennifer Croft
+
+[https://medium.com/feed/@safrin2]
+name=Sanjida Afrin
+
+[https://dev.to/feed/zg3d]
+name=Devansh Shah
+
+[http://jliu396.blogspot.com/feeds/posts/default/-/open%20source]
+name=Junyong Liu
+
+[http://mamadou--diallo.blogspot.com/feeds/posts/default]
+name=Mamadou Diallo
+
+[https://muskanshinh.wordpress.com/category/open-source/feed/]
+name=Muskan Shinh
+
+[https://dev.to/feed/klee214]
+name=Kimin Lee
+
+[https://medium.com/feed/@ahugh2000]
+name=Alexander Hugh
