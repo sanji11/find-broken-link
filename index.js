@@ -34,15 +34,12 @@ var argv  = require("yargs")
 
     })
     .check((argv) => {
-       
         if(argv.f || argv.u){
             handleArg(argv)
             return true
-       
-        }
+       }
         console.log(chalk.red.bold('At least one arguement is required!'));
         return false
-        
     })
     .version('v', 'Show version number', '1.0.0')
     .alias('v', 'version')
@@ -56,23 +53,18 @@ function handleArg(argv){
         readFile(argv.f)
     //when arguemnt is a url
     }else if(argv.u){
-    
         checkUrlAndReport(argv.u)
-
     }
 }
-function checkUrlAndReport(url){
 
+function checkUrlAndReport(url){
     //send http request and check the status
-      
-    fetch(url)
+      fetch(url)
         .then(function (response){
-                
             if(response.status == 400 || response.status == 404){
                 console.log(chalk.red.bold("Bad ===> " + response.url));
             }else if(response.status == 200){
                 console.log(chalk.green.bold("Good ===> " + response.url));
-            
             }else{
                 console.log(chalk.grey.bold("Unknown ===> " + response.url));
             }
@@ -84,24 +76,14 @@ function checkUrlAndReport(url){
         
 }
 
-
 function readFile(fileName){
     lineReader.eachLine(fileName, function(line){
-    
         //find if any line conatins url with http and https
         var match_array = line.match(regex);
-    
         if(match_array != null){
-    
             for(i = 0; i < match_array.length; i++){
-                
                 checkUrlAndReport(match_array[i]);
-                
-                
             }
-            
         }
-        
     })
-    
 }
