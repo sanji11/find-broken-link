@@ -1,4 +1,4 @@
-# find_broken_link
+# fbl(find-broken-link)
 This tool reports the broken link in a file or a url
 # how to use it
 install it by running `npm install https://github.com/sanji11/find_broken_link` on your terminal.
