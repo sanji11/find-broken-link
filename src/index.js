@@ -1,18 +1,14 @@
 #!/usr/bin/env node
 
-//to color the output
-const chalk = require("chalk"); 
-// to read line one by one
-const lineReader = require('line-reader'); 
-// to send request and get response
-const fetch = require("node-fetch"); 
+const chalk = require("chalk"); //to color the output
+const lineReader = require('line-reader'); // to read line one by one
+const fetch = require("node-fetch"); // to send request and get response
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 //set the arguement
-var argv  = require("yargs") 
-    .scriptName("Find broken link(fbl)")
-    .usage("Usage: $0 [options] <argument> where argument can be file name or a url")
-    
+const argv  = require("yargs") 
+    .scriptName("fbl")
+    .usage("Usage: $0 [options] <argument> where argument can be a file name or a url")
     .example(
         "$ fbl -f test.html or test.txt",
         "process the file to find any broken link inside the file."
@@ -43,6 +39,8 @@ var argv  = require("yargs")
     })
     .version('v', 'Show version number', '1.0.0')
     .alias('v', 'version')
+    .help('h', "Show help.")
+    .alias('h', 'help')
     .epilog("copyright 2020")
     .argv;
 
@@ -57,30 +55,31 @@ function handleArg(argv){
     }
 }
 
+//send http request and check the status
 function checkUrlAndReport(url){
-    //send http request and check the status
       fetch(url)
         .then(function (response){
             if(response.status == 400 || response.status == 404){
-                console.log(chalk.red.bold("Bad ===> " + response.url));
+                console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url));
             }else if(response.status == 200){
-                console.log(chalk.green.bold("Good ===> " + response.url));
+                console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url));
             }else{
-                console.log(chalk.grey.bold("Unknown ===> " + response.url));
+                console.log(chalk.grey.bold("Unknown ===> "+ response.status + " ===> "  + response.url));
             }
         }).catch(function (err){
-            console.log(chalk.blue.bold("Not exist ===> " + url));
+            console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url));
         })    
 }
 
+// read each line of a file and call checkUrlandReport function
 function readFile(fileName){
-    lineReader.eachLine(fileName, function(line){
+    lineReader.eachLine(fileName, (line)=>{
         //find if any line conatins url with http and https
-        var match_array = line.match(regex);
+        let match_array = line.match(regex);
         if(match_array != null){
-            for(i = 0; i < match_array.length; i++){
-                checkUrlAndReport(match_array[i]);
-            }
+            match_array.forEach((i) => {
+                checkUrlAndReport(i);
+            });    
         }
     })
 }
