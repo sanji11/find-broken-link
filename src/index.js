@@ -20,7 +20,7 @@ const argv  = require("yargs")
     .option("f", {
         alias: "fileName",
         describe: "Any file you want to check for broken link",
-        type: "string",
+        type: "array",
 
     })
     .option("u", {
@@ -57,7 +57,7 @@ function handleArg(argv){
 
 //send http request and check the status
 function checkUrlAndReport(url){
-      fetch(url)
+    fetch(url, {method: "head", timeout: 13000})
         .then(function (response){
             if(response.status == 400 || response.status == 404){
                 console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url));
@@ -73,13 +73,15 @@ function checkUrlAndReport(url){
 
 // read each line of a file and call checkUrlandReport function
 function readFile(fileName){
-    lineReader.eachLine(fileName, (line)=>{
-        //find if any line conatins url with http and https
-        let match_array = line.match(regex);
-        if(match_array != null){
-            match_array.forEach((i) => {
-                checkUrlAndReport(i);
-            });    
-        }
-    })
+    fileName.forEach(i => {
+        lineReader.eachLine(i, (line)=>{
+            //find if any line conatins url with http and https
+            let match_array = line.match(regex);
+            if(match_array != null){
+                match_array.forEach((i) => {
+                    checkUrlAndReport(i);
+                });    
+            }
+        })
+    });
 }
