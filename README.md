@@ -17,7 +17,7 @@ To install it, open your terminal and run ` npm install -g https://github.com/sa
 
 `fbl [options] <argument>`
 - To check broken link for a file,
-type `fbl -f [path to the file]`
+type `fbl -f [path to the file] [path to other file]...`
 - To check broken link directy for a url,
 type `fbl -u [url]`  
 
