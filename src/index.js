@@ -47,6 +47,7 @@ const argv = require("yargs")
     .alias('v', 'version')
     .help('h', "Show help.")
     .alias('h', 'help')
+    .demandCommand() // show help menu when there is no arguments
     .epilog("copyright 2020")
     .argv;
 
