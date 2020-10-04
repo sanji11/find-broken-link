@@ -47,13 +47,12 @@ const argv = require("yargs")
     .alias('v', 'version')
     .help('h', "Show help.")
     .alias('h', 'help')
-    .demandCommand() // show help menu when there is no arguments
     .epilog("copyright 2020")
     .argv;
 
 //handle when there is a arguement
 function handleArg(argv) {
-    //when arguement is a filename
+    //when argument is a filename
     if (argv.f) {
         readFile(argv.f)
         //when arguemnt is a url
