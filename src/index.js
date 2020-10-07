@@ -4,23 +4,29 @@ const chalk = require("chalk"); //to color the output
 const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
 const axios = require('axios');
+const v = require("../package.json").version; //getting version number
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
+const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
 //set the arguement
 const argv = require("yargs")
     .scriptName("fbl")
     .usage("Usage: $0 [options] <argument> where argument can be a file name or a url")
     .example(
         "$ fbl -f test.html or test.txt",
-        "process the file to find any broken link inside the file."
+        "process the file/files to find any broken link inside the file."
     )
     .example(
         "$ fbl -u https://www.google.ca/",
         "check the url if it is broken link or not."
     )
+    .example(
+        "$fbl -a https://www.google.com/",
+         "Check the url if it has archived version or not"  
+    )
     .option("f", {
         alias: "fileName",
-        describe: "Any file you want to check for broken link",
+        describe: "Any file/files you want to check for broken link",
         type: "array",
 
     })
@@ -35,16 +41,25 @@ const argv = require("yargs")
         describe: "Show the archived version of an URL",
         type: "string",
     })
-    .check((argv) => {
+    
+   .check((argv) => {
         if (argv.f || argv.u || argv.a) {
-            handleArg(argv)
-            return true
+            //check if file name is provided with -f option or not
+            const argNum = argv._;
+            if(argNum.length > 0){
+                handleArg(argv)
+                return true
+            }else{
+                throw new Error(chalk.red.bold('Please provide a file name along with the option.')); 
+            }       
+        }else{
+            //if the options or argument with other option is not provided
+            throw new Error(chalk.red.bold('At least one option/argument is required!'));
         }
-        console.log(chalk.red.bold('At least one arguement is required!'));
-        return false
+        
     })
-    .version('v', 'Show version number', '1.0.0')
     .alias('v', 'version')
+    .version(`${versionDetails}`)
     .help('h', "Show help.")
     .alias('h', 'help')
     .epilog("copyright 2020")
@@ -62,6 +77,8 @@ function handleArg(argv) {
     else if (argv.a) {
         console.log(argv.a);
         archivedURL(argv.a)
+    }else if(argv.v){
+        console.log(chalk.red.bold(`Current Version Number: {$v}`));
     }
 }
 
