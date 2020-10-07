@@ -43,19 +43,20 @@ const argv = require("yargs")
     })
     
    .check((argv) => {
-        if (argv.f || argv.u || argv.a) {
+        if (argv.f) {
             //check if file name is provided with -f option or not
-            const argNum = argv._;
-            if(argNum.length > 0){
+            if(argv.f.length > 0){
                 handleArg(argv)
                 return true
             }else{
                 throw new Error(chalk.red.bold('Please provide a file name along with the option.')); 
             }       
-        }else{
-            //if the options or argument with other option is not provided
-            throw new Error(chalk.red.bold('At least one option/argument is required!'));
+        }else if(argv.a || argv.u){
+            handleArg(argv)
+            return true
         }
+        //if the options or argument with other option is not provided
+        throw new Error(chalk.red.bold('At least one option/argument is required!'));
         
     })
     .alias('v', 'version')
@@ -84,13 +85,15 @@ function handleArg(argv) {
 
 //send http request and check the status
 function checkUrlAndReport(url) {
-    fetch(url, { method: "head", timeout: 13000 })
+    fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
             if (response.status == 400 || response.status == 404) {
                 console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url));
             } else if (response.status == 200) {
                 console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url));
-            } else {
+            } else if(response.status == 301 || response.status == 307 || response.status == 308){
+                console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
+            }else {
                 console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url));
             }
         }).catch(function (err) {

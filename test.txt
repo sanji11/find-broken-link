@@ -3,7 +3,7 @@
 #Feed excluded due to getaddrinfo ENOTFOUND s-aleinikov.blog.ca s-aleinikov.blog.ca:80
 #[http://s-aleinikov.blog.ca/feed/atom/posts/]
 #name=Sergey Aleinikov
-
+#[https://documentation.elasticpath.com/commerce-cloud/docs/owner/index.html]
 
 #Feed excluded due to getaddrinfo ENOTFOUND ejtorre.blog.ca ejtorre.blog.ca:80
 #[http://ejtorre.blog.ca/feed/rss2/posts/]
