@@ -20,6 +20,8 @@ To install it, open your terminal and run ` npm install -g https://github.com/sa
 type `fbl -f [path to the file] [path to other file]...`
 - To check broken link directy for a url,
 type `fbl -u [url]`  
+- To find an archived version of an URL,
+type `fbl -a [url]`
 
 ### Options
 
@@ -27,6 +29,8 @@ type `fbl -u [url]`
 * `-u`, `--url`: url you want to check for broken link
 * `-v`, `--version`: prints current version number of the CLI
 * `-h`, `--help`: prints the options available for the CLI with the example of how to use it
+* `-a`, `--archived`: prints the options available for the archived version of a valid URL
+
 
 ## Testing
 
