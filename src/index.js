@@ -21,48 +21,46 @@ const argv = require("yargs")
         "process the files in the directories to find any broken link."
     )
     .example(
-        "$ fbl -u https://www.google.ca/",
-        "check the url if it is broken link or not."
+        "$ fbl -u https://www.google.ca/ https://www.facebook.com/",
+        "check all the url if it is broken link or not."
     )
     .example(
-        "$fbl -a https://www.google.com/",
-         "Check the url if it has archived version or not"  
+        "$fbl -a https://www.google.com/ https://www.facebook.com/",
+         "Check all the url if it has archived version or not"  
     )
     .option("f", {
         alias: "fileName",
-        describe: "Any file/files you want to check for broken link",
+        describe: "Show the broken link for any number of file",
         type: "array",
 
     })
     .option("d", {
         alias: "dir",
-        describe: "Any directory path/paths you want to check for broken link",
+        describe: "Show the broken link for any number of directory",
         type: "array",
 
     })
     .option("u", {
         alias: "url",
-        describe: "Any url you want to check for broken link",
-        type: "string",
+        describe: "Show the broken link for any number of URL",
+        type: "array",
 
     })
     .option("a", {
         alias: "archived",
-        describe: "Show the archived version of an URL",
-        type: "string",
+        describe: "Show the archived version of any number of URL",
+        type: "array",
     })  
    .check((argv) => {
        //check if the options is provided or argument with option is provided or not
-        if ((argv.f && argv.f.length != 0) || argv.a || argv.u || (argv.d && argv.d.length != 0)) {
+        if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0)) {
             handleArg(argv)
             return true
         }
-        throw new Error(chalk.red.bold('At least one option/argument is required!'));
-        
+        throw new Error(chalk.red.bold('At least one option/argument is required!'))        
     })
     .alias('v', 'version')
     .version(`${versionDetails}`)
-    .help('h', "Show help.")
     .alias('h', 'help')
     .epilog("copyright 2020")
     .argv;
@@ -83,12 +81,15 @@ function handleArg(argv) {
             })
         }) 
     }else if (argv.u) {
-        checkUrlAndReport(argv.u)
+        argv.u.forEach(singleUrl=>{
+            checkUrlAndReport(singleUrl)
+        })    
     }else if (argv.a) {
-        console.log(argv.a);
-        archivedURL(argv.a)  
+        argv.a.forEach(singleUrl=>{
+            archivedURL(singleUrl)
+        })  
     }else if(argv.v){
-        console.log(chalk.red.bold(`Current Version Number: {$v}`));
+        console.log(chalk.red.bold(`Current Version Number: {$v}`))
     }else{
 
     }
@@ -99,16 +100,16 @@ function checkUrlAndReport(url) {
     fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
             if (response.status == 400 || response.status == 404) {
-                console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url));
+                console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
             } else if (response.status == 200) {
-                console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url));
+                console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
             } else if(response.status == 301 || response.status == 307 || response.status == 308){
                 console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
             }else {
-                console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url));
+                console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
             }
         }).catch(function (err) {
-            console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url));
+            console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
         })
 }
 
@@ -117,20 +118,20 @@ function readFile(fileNames) {
     fileNames.forEach(file => {
         lineReader.eachLine(file, (line) => {
             //find if any line conatins url with http and https
-            let match_array = line.match(regex);
+            let match_array = line.match(regex)
             if (match_array != null) {
                 match_array.forEach((i) => {
-                    checkUrlAndReport(i);
-                });
+                    checkUrlAndReport(i)
+                })
             }
         })
-    });
+    })
 }
 
 
 //archived version from wayback machine url
 function archivedURL(url) {
-    let bashed_url = encodeURIComponent(url, 26, true);
+    let bashed_url = encodeURIComponent(url, 26, true)
     axios.get(`http://archive.org/wayback/available?url=${bashed_url}`)
         .then(response => {
             if (response.data.archived_snapshots.length == 0) {
