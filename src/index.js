@@ -5,7 +5,9 @@ const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
 const axios = require('axios');
 const fs = require('fs');
-const v = require("../package.json").version; //getting version number
+const v = require("../package.json").version; //getting version number]
+var config
+//const config = require("./fbl-config.json")
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
@@ -50,10 +52,17 @@ const argv = require("yargs")
         alias: "archived",
         describe: "Show the archived version of any number of URL",
         type: "array",
-    })  
+    })
+    .option("c", {
+        alias: "config",
+        describe: "Provide a config file",
+        type: "string",
+    })
    .check((argv) => {
+       console.log(argv.c)
        //check if the options is provided or argument with option is provided or not
-        if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0)) {
+        if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || 
+        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0) || argv.c) {
             handleArg(argv)
             return true
         }
@@ -90,26 +99,48 @@ function handleArg(argv) {
         })  
     }else if(argv.v){
         console.log(chalk.red.bold(`Current Version Number: {$v}`))
-    }else{
+    }
 
+    if(argv.c){
+        try{
+            if(fs.existsSync(argv.c)){
+                console.log("File exists")
+                config = require(argv.c)
+                console.log(config)
+            }else{
+                console.log("File does not exist")
+            }
+        
+        }catch(err){
+            console.error(err)
+        }
+        
     }
 }
-
 //send http request and check the status
 function checkUrlAndReport(url) {
+    if(config.resultType == "" || !config.resultType){
+        config.resultType = "all"
+    }    
+    //console.log(config)
     fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
-            if (response.status == 400 || response.status == 404) {
+            if ((config.resultType ==="all" || config.resultType ==="bad") && (response.status == 400 || response.status == 404)) {
                 console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
-            } else if (response.status == 200) {
-                console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
-            } else if(response.status == 301 || response.status == 307 || response.status == 308){
+            } else if ((config.resultType ==="all" || config.resultType ==="good") && response.status == 200) {
+                console.log(chalk.green.bold( "Good ===> " + response.status + " ===> " + response.url))
+            } else if( (config.resultType ==="all") && (response.status == 301 || response.status == 307 || response.status == 308)){
                 console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
             }else {
-                console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
+                if(config.resultType == "all"){
+                    console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
+                }
             }
         }).catch(function (err) {
-            console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+            if(config.resultType == "all"){
+                console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+            }
+            
         })
 }
 
