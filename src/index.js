@@ -4,6 +4,7 @@ const chalk = require("chalk"); //to color the output
 const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
 const axios = require('axios');
+const fs = require('fs');
 const v = require("../package.json").version; //getting version number
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
@@ -13,8 +14,11 @@ const argv = require("yargs")
     .scriptName("fbl")
     .usage("Usage: $0 [options] <argument> where argument can be a file name or a url")
     .example(
-        "$ fbl -f test.html or test.txt",
-        "process the file/files to find any broken link inside the file."
+        "$ fbl -f test.html test.txt",
+        "process the files to find any broken link."
+    ).example(
+        "$ fbl -d test test2",
+        "process the files in the directories to find any broken link."
     )
     .example(
         "$ fbl -u https://www.google.ca/",
@@ -30,6 +34,12 @@ const argv = require("yargs")
         type: "array",
 
     })
+    .option("d", {
+        alias: "dir",
+        describe: "Any directory path/paths you want to check for broken link",
+        type: "array",
+
+    })
     .option("u", {
         alias: "url",
         describe: "Any url you want to check for broken link",
@@ -40,22 +50,13 @@ const argv = require("yargs")
         alias: "archived",
         describe: "Show the archived version of an URL",
         type: "string",
-    })
-    
+    })  
    .check((argv) => {
-        if (argv.f) {
-            //check if file name is provided with -f option or not
-            if(argv.f.length > 0){
-                handleArg(argv)
-                return true
-            }else{
-                throw new Error(chalk.red.bold('Please provide a file name along with the option.')); 
-            }       
-        }else if(argv.a || argv.u){
+       //check if the options is provided or argument with option is provided or not
+        if ((argv.f && argv.f.length != 0) || argv.a || argv.u || (argv.d && argv.d.length != 0)) {
             handleArg(argv)
             return true
         }
-        //if the options or argument with other option is not provided
         throw new Error(chalk.red.bold('At least one option/argument is required!'));
         
     })
@@ -66,20 +67,30 @@ const argv = require("yargs")
     .epilog("copyright 2020")
     .argv;
 
-//handle when there is a arguement
+//handle when there is an option
 function handleArg(argv) {
-    //when argument is a filename
     if (argv.f) {
-        readFile(argv.f)
-        //when arguemnt is a url
-    } else if (argv.u) {
+        readFile(argv.f)       
+    }else if(argv.d){
+        //handle multiple directories
+        argv.d.forEach(dir=>{
+        fs.readdir(dir, (err, files)=>{
+            if(err){
+                console.log(err)
+            }else{
+                readFile(files)
+                }
+            })
+        }) 
+    }else if (argv.u) {
         checkUrlAndReport(argv.u)
-    }
-    else if (argv.a) {
+    }else if (argv.a) {
         console.log(argv.a);
-        archivedURL(argv.a)
+        archivedURL(argv.a)  
     }else if(argv.v){
         console.log(chalk.red.bold(`Current Version Number: {$v}`));
+    }else{
+
     }
 }
 
@@ -102,9 +113,9 @@ function checkUrlAndReport(url) {
 }
 
 // read each line of a file and call checkUrlandReport function
-function readFile(fileName) {
-    fileName.forEach(i => {
-        lineReader.eachLine(i, (line) => {
+function readFile(fileNames) {
+    fileNames.forEach(file => {
+        lineReader.eachLine(file, (line) => {
             //find if any line conatins url with http and https
             let match_array = line.match(regex);
             if (match_array != null) {
