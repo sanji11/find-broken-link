@@ -13,7 +13,6 @@ var jsonObj = {
     "url": String,
     "status": Number
 }
-var jsonResponse = [];
 //set the arguement
 const argv = require("yargs")
     .scriptName("fbl")
@@ -32,6 +31,10 @@ const argv = require("yargs")
     .example(
         "$fbl -a https://www.google.com/ https://www.facebook.com/",
          "Check all the url if it has archived version or not"  
+    )
+    .example(
+        "$fbl -j -f /test2.html",
+         "Print the output of the file in JSON"  
     )
     .option("f", {
         alias: "fileName",
@@ -58,13 +61,13 @@ const argv = require("yargs")
     })
     .option("j", {
         alias: "json",
-        describe: "output the result into JSON format",
+        describe: "Output the result into JSON format",
         type: "boolean",
     })  
    .check((argv) => {
        //check if the options is provided or argument with option is provided or not
         if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || 
-        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0) || argv.j) {
+        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0)) {
             handleArg(argv)
             return true
         }
@@ -103,19 +106,14 @@ function handleArg(argv) {
         console.log(chalk.red.bold(`Current Version Number: {$v}`))
     }
     
+    
 }
 
 //send http request and check the status
-function checkUrlAndReport(url) {
-    fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
+ function checkUrlAndReport(url) {
+     fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
-            if(argv.j){
-                jsonObj.url = response.url
-                jsonObj.status = response.status
-                jsonResponse.push(jsonObj)
-                console.log(JSON.stringify(jsonResponse))
-
-            }else{
+            if(!argv.j){
                 if (response.status == 400 || response.status == 404) {
                     console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
                 } else if (response.status == 200) {
@@ -125,16 +123,27 @@ function checkUrlAndReport(url) {
                 }else {
                     console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
                 }
-            }
+            }else{
+                storeJsonDataAndPrint(response.url, response.status)
+            }      
                             
         }).catch(function (err) {
             if(!argv.j){
                 console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+            }else{
+                storeJsonDataAndPrint(url, "000")
             }
             
         })
-    }
+
         
+}
+ function storeJsonDataAndPrint(url, status){
+    jsonObj.url = url
+    jsonObj.status = status
+    console.log(jsonObj)
+
+ }       
 
 // read each line of a file and call checkUrlandReport function
 function readFile(fileNames) {
@@ -142,6 +151,12 @@ function readFile(fileNames) {
         lineReader.eachLine(file, (line) => {
             //find if any line conatins url with http and https
             let match_array = line.match(regex)
+            // remove duplicates
+            match_array.forEach((i)=>{
+                if(match_array[i] == match_array[i+1]){
+                    match_array.splice(i, 1)
+                }
+            })
             if (match_array != null) {
                 match_array.forEach((i) => {
                     checkUrlAndReport(i)
@@ -149,6 +164,11 @@ function readFile(fileNames) {
             }
         })
     })
+    
+    
+
+    //console.log(argv.j)   
+    
 }
 
 
