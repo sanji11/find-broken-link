@@ -15,7 +15,8 @@ This is a command line tool designed to report broken link and their status, suc
 * Find broken links for one or more file
 * Find broken links for one or more file in one or more directory
 * Find broken links directly from one or more URL
-* FInd archvied version of link directly from one or more URL
+* Find archvied version of link directly from one or more URL
+* Prints good links or bad links or all links based on config file
 
 ## Installation
 
@@ -60,6 +61,16 @@ To find an archived version of one or more URL:
 ```sh
 $ fbl -a [url1] [url2]... 
 ```
+To print specific type of URL(good/bad/all):
+
+```sh
+$ fbl -c [path to json file]
+along with other options
+```
+The structure of config file must follow the structure:
+
+{"resultType" : "[type]"} where type can be `good` or `bad` or `all`
+
 
 ### Options
 

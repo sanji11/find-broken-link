@@ -5,10 +5,11 @@ const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
 const axios = require('axios');
 const fs = require('fs');
-const v = require("../package.json").version; //getting version number]
-var config
+const path = require('path')
+const v = require("../package.json").version; //getting version number
 //const config = require("./fbl-config.json")
 // to match url with http and https
+var config
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
 //set the arguement
@@ -16,10 +17,10 @@ const argv = require("yargs")
     .scriptName("fbl")
     .usage("Usage: $0 [options] <argument> where argument can be a file name or a url")
     .example(
-        "$ fbl -f test.html test.txt",
+        "$ fbl -f ./test.html ./test.txt",
         "process the files to find any broken link."
     ).example(
-        "$ fbl -d test test2",
+        "$ fbl -d ./test/ ./test2/",
         "process the files in the directories to find any broken link."
     )
     .example(
@@ -29,6 +30,10 @@ const argv = require("yargs")
     .example(
         "$fbl -a https://www.google.com/ https://www.facebook.com/",
          "Check all the url if it has archived version or not"  
+    )
+    .example(
+        "fbl -c src/fbl-config.json -d ./test/ ",
+        "Print the URL from the directory based on config file result type"
     )
     .option("f", {
         alias: "fileName",
@@ -59,7 +64,6 @@ const argv = require("yargs")
         type: "string",
     })
    .check((argv) => {
-       console.log(argv.c)
        //check if the options is provided or argument with option is provided or not
         if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || 
         (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0) || argv.c) {
@@ -100,17 +104,23 @@ function handleArg(argv) {
     }else if(argv.v){
         console.log(chalk.red.bold(`Current Version Number: {$v}`))
     }
-
     if(argv.c){
         try{
+            //check if the config file exists or not
+            
             if(fs.existsSync(argv.c)){
-                console.log("File exists")
-                config = require(argv.c)
-                console.log(config)
+                //check if the user provide absolute path or not
+                if(path.isAbsolute(argv.c)){
+                    config = require(argv.c)
+                }else{
+                    //get the absolute path of that config file
+                    const filePath = path.resolve(argv.c)
+                    config = require(filePath)
+                }
+                            
             }else{
-                console.log("File does not exist")
-            }
-        
+                console.log(chalk.red.bold("Config file does not exist"))
+            }      
         }catch(err){
             console.error(err)
         }
@@ -119,28 +129,49 @@ function handleArg(argv) {
 }
 //send http request and check the status
 function checkUrlAndReport(url) {
-    if(config.resultType == "" || !config.resultType){
-        config.resultType = "all"
-    }    
-    //console.log(config)
+     
     fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
-            if ((config.resultType ==="all" || config.resultType ==="bad") && (response.status == 400 || response.status == 404)) {
-                console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
-            } else if ((config.resultType ==="all" || config.resultType ==="good") && response.status == 200) {
-                console.log(chalk.green.bold( "Good ===> " + response.status + " ===> " + response.url))
-            } else if( (config.resultType ==="all") && (response.status == 301 || response.status == 307 || response.status == 308)){
-                console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
-            }else {
-                if(config.resultType == "all"){
+             /*When -c only prints specific type URL, else prints normal way */
+            if(!argv.c){
+                //normal output
+                if (response.status == 400 || response.status == 404) {
+                    console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
+                } else if (response.status == 200) {
+                    console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
+                } else if(response.status == 301 || response.status == 307 || response.status == 308){
+                    console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
+                }else {
                     console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
                 }
-            }
+            }else{
+                //config output
+                /*Check the provided config file to find the result type*/
+                if(config.resultType == "" || !config.resultType){
+                    config.resultType = "all" //the default type
+                }
+                /*Print output according to config file and status code */ 
+                if ((config.resultType ==="all" || config.resultType ==="bad") && (response.status == 400 || response.status == 404)) {
+                    console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
+                } else if ((config.resultType ==="all" || config.resultType ==="good") && response.status == 200) {
+                    console.log(chalk.green.bold( "Good ===> " + response.status + " ===> " + response.url))
+                } else if( (config.resultType ==="all") && (response.status == 301 || response.status == 307 || response.status == 308)){
+                    console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
+                }else {
+                    if(config.resultType == "all"){
+                        console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
+                    }
+                }
+            }        
+           
         }).catch(function (err) {
-            if(config.resultType == "all"){
+            if(!argv.c){
                 console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+            }else{
+                if(config.resultType == "all"){
+                    console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+                }               
             }
-            
         })
 }
 
@@ -159,6 +190,9 @@ function readFile(fileNames) {
     })
 }
 
+//print link based on config file
+function printURL(configFile){
+}
 
 //archived version from wayback machine url
 function archivedURL(url) {
