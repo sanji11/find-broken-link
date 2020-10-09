@@ -129,8 +129,7 @@ function handleArg(argv) {
 }
 //send http request and check the status
 function checkUrlAndReport(url) {
-     
-    fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
+      fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
              /*When -c only prints specific type URL, else prints normal way */
             if(!argv.c){
@@ -188,10 +187,6 @@ function readFile(fileNames) {
             }
         })
     })
-}
-
-//print link based on config file
-function printURL(configFile){
 }
 
 //archived version from wayback machine url
