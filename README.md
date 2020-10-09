@@ -4,7 +4,7 @@ This is a command line tool designed to report broken link and their status, suc
 
 ## Feature
 
-![fbl](./fbl.PNG)
+![fbl](./fbl_cmd.PNG)
 
 * Identify different types of URL with status code in colour coded:
     - Good link - status code `200`
@@ -17,6 +17,7 @@ This is a command line tool designed to report broken link and their status, suc
 * Find broken links directly from one or more URL
 * Find archvied version of link directly from one or more URL
 * Accepts configuration file for customizing result (good, bad, all links)
+* Print the output in JSON format
 
 ## Installation
 
@@ -70,6 +71,11 @@ The Config file must be a valid json with following structure:
 
 {"resultType" : "[type]"} where type can be `good` or `bad` or `all`. You can change the resultType while testing.
 
+To print output in JSON:
+
+```sh
+$ fbl -j <another option>
+```
 
 ### Options
 
@@ -78,6 +84,7 @@ The Config file must be a valid json with following structure:
 * `-u`, `--url`: one or more URL you want to check for broken link
 * `-a`, `--archived`: one or more URL you want to check for archived version
 * `-c`, `--config`: uses the configuartion from specified file
+* `-j`, `--json` : prints output in JSON
 * `-v`, `--version`: prints current version number of the CLI with tool name
 * `-h`, `--help`: prints the options available for the CLI with the example of how to use it
 

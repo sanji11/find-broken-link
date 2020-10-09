@@ -11,6 +11,11 @@ const v = require("../package.json").version; //getting version number
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
 var config //config file
+//to store the output
+var jsonObj = {
+    "url": String,
+    "status": Number
+}
 //set the arguement
 const argv = require("yargs")
     .scriptName("fbl")
@@ -33,6 +38,9 @@ const argv = require("yargs")
     .example(
         "fbl -c src/fbl-config.json -f ./test.txt/ ",
         "Print the URL from the file based on Config file's result type"
+    ).example(
+        "$fbl -j -f /test2.html",
+         "Print the output of the file in JSON"  
     )
     .option("f", {
         alias: "fileName",
@@ -62,10 +70,15 @@ const argv = require("yargs")
         describe: "Provide a config file",
         type: "string",
     })
+    .option("j", {
+        alias: "json",
+        describe: "Output the result into JSON format",
+        type: "boolean",
+    })   
    .check((argv) => {
        //check if the options is provided or argument with option is provided or not
         if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || 
-        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0) || argv.c) {
+        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0)) {
             handleArg(argv)
             return true
         }
@@ -132,11 +145,14 @@ function setDefaultConfig(){
     config = {
         resultType: "all"
     }
+    
+    
 }
 //send http request and check the status
 function checkUrlAndReport(url) {
       fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
+            if(!argv.j){
                 /*if resultType is empty or user does not follow the structure of the config file, set it to default*/
                 if(config.resultType == "" || !config.resultType){
                     setDefaultConfig() 
@@ -153,27 +169,47 @@ function checkUrlAndReport(url) {
                         console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
                     }
                 }
+            }else{
+                //output in JSON
+                storeJsonDataAndPrint(response.url, response.status)
+            }
+                
         }).catch(function (err) {
-            if(config.resultType == "all"){
-                console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
-            }               
-            
-        })
+            if(!argv.j){
+                if(config.resultType == "all"){
+                    console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+                }
+            }else{
+                //output in JSON
+                storeJsonDataAndPrint(url, "000")
+            }
+        })                    
+        
 }
+ function storeJsonDataAndPrint(url, status){
+    jsonObj.url = url
+    jsonObj.status = status
+    console.log(jsonObj)
+
+ }       
 
 // read each line of a file and call checkUrlandReport function
 function readFile(fileNames) {
     fileNames.forEach(file => {
         lineReader.eachLine(file, (line) => {
             //find if any line conatins url with http and https
-            let match_array = line.match(regex)
+            let match_array = line.match(regex)    
             if (match_array != null) {
+                // remove duplicates
                 match_array.forEach((i) => {
+                    if(match_array[i] == match_array[i+1]){
+                        match_array.splice(i, 1)
+                    }
                     checkUrlAndReport(i)
                 })
             }
         })
-    })
+    })    
 }
 
 //archived version from wayback machine url
