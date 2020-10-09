@@ -16,7 +16,7 @@ This is a command line tool designed to report broken link and their status, suc
 * Find broken links for one or more file in one or more directory
 * Find broken links directly from one or more URL
 * Find archvied version of link directly from one or more URL
-* Prints good links or bad links or all links based on config file
+* Accepts configuration file for customizing result (good, bad, all links)
 
 ## Installation
 
@@ -64,12 +64,11 @@ $ fbl -a [url1] [url2]...
 To print specific type of URL(good/bad/all):
 
 ```sh
-$ fbl -c [path to json file]
-along with other options
+$ fbl -c [path to Config file] <another option>
 ```
-The structure of config file must follow the structure:
+The Config file must be a valid json with following structure:
 
-{"resultType" : "[type]"} where type can be `good` or `bad` or `all`
+{"resultType" : "[type]"} where type can be `good` or `bad` or `all`. You can change the resultType while testing.
 
 
 ### Options
@@ -78,12 +77,13 @@ The structure of config file must follow the structure:
 * `-d`, `--dir` : path to one or more directories you want to check for broken link
 * `-u`, `--url`: one or more URL you want to check for broken link
 * `-a`, `--archived`: one or more URL you want to check for archived version
+* `-c`, `--config`: uses the configuartion from specified file
 * `-v`, `--version`: prints current version number of the CLI with tool name
 * `-h`, `--help`: prints the options available for the CLI with the example of how to use it
 
 ## Testing
 
-For testing purposes, two test files(test.txt, test2.html) and one test directory have been provided.
+For testing purposes, two test files(test.txt, test2.html), one test directory, and a Config file have been provided.
 
 ## Improvement
 

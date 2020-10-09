@@ -7,11 +7,10 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path')
 const v = require("../package.json").version; //getting version number
-//const config = require("./fbl-config.json")
 // to match url with http and https
-var config
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
+var config //config file
 //set the arguement
 const argv = require("yargs")
     .scriptName("fbl")
@@ -32,8 +31,8 @@ const argv = require("yargs")
          "Check all the url if it has archived version or not"  
     )
     .example(
-        "fbl -c src/fbl-config.json -d ./test/ ",
-        "Print the URL from the directory based on config file result type"
+        "fbl -c src/fbl-config.json -f ./test.txt/ ",
+        "Print the URL from the file based on Config file's result type"
     )
     .option("f", {
         alias: "fileName",
@@ -106,8 +105,7 @@ function handleArg(argv) {
     }
     if(argv.c){
         try{
-            //check if the config file exists or not
-            
+            //check if the config file exists or not          
             if(fs.existsSync(argv.c)){
                 //check if the user provide absolute path or not
                 if(path.isAbsolute(argv.c)){
@@ -116,40 +114,34 @@ function handleArg(argv) {
                     //get the absolute path of that config file
                     const filePath = path.resolve(argv.c)
                     config = require(filePath)
-                }
-                            
+                }                           
             }else{
-                console.log(chalk.red.bold("Config file does not exist"))
+                console.log(chalk.bgMagentaBright.bold(" Config file does not exist; Using default config. "))    
+                setDefaultConfig()               
             }      
         }catch(err){
             console.error(err)
-        }
-        
+        }        
+    }
+    else {
+        setDefaultConfig()
+    }
+}
+//setting a default config when there's no config file
+function setDefaultConfig(){
+    config = {
+        resultType: "all"
     }
 }
 //send http request and check the status
 function checkUrlAndReport(url) {
       fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
-             /*When -c only prints specific type URL, else prints normal way */
-            if(!argv.c){
-                //normal output
-                if (response.status == 400 || response.status == 404) {
-                    console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
-                } else if (response.status == 200) {
-                    console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
-                } else if(response.status == 301 || response.status == 307 || response.status == 308){
-                    console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
-                }else {
-                    console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
-                }
-            }else{
-                //config output
-                /*Check the provided config file to find the result type*/
+                /*if resultType is empty or user does not follow the structure of the config file, set it to default*/
                 if(config.resultType == "" || !config.resultType){
-                    config.resultType = "all" //the default type
+                    setDefaultConfig() 
                 }
-                /*Print output according to config file and status code */ 
+                /*Print output according to config file and status code */
                 if ((config.resultType ==="all" || config.resultType ==="bad") && (response.status == 400 || response.status == 404)) {
                     console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
                 } else if ((config.resultType ==="all" || config.resultType ==="good") && response.status == 200) {
@@ -161,16 +153,11 @@ function checkUrlAndReport(url) {
                         console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
                     }
                 }
-            }        
-           
         }).catch(function (err) {
-            if(!argv.c){
+            if(config.resultType == "all"){
                 console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
-            }else{
-                if(config.resultType == "all"){
-                    console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
-                }               
-            }
+            }               
+            
         })
 }
 
