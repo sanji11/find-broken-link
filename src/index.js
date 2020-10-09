@@ -9,6 +9,10 @@ const v = require("../package.json").version; //getting version number
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
+var jsonObj = {
+    "url": String,
+    "status": Number
+}
 var jsonResponse = [];
 //set the arguement
 const argv = require("yargs")
@@ -103,36 +107,34 @@ function handleArg(argv) {
 
 //send http request and check the status
 function checkUrlAndReport(url) {
-    var jsonObj
     fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
         .then(function (response) {
-            if (response.status == 400 || response.status == 404) {
-                jsonObj = {url : `${response.url}`, status: `${response.status}`}
+            if(argv.j){
+                jsonObj.url = response.url
+                jsonObj.status = response.status
                 jsonResponse.push(jsonObj)
-                console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
-            } else if (response.status == 200) {
-                jsonObj = {url : `${response.url}`, status: `${response.status}`}
-                jsonResponse.push(jsonObj)
-                console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
-            } else if(response.status == 301 || response.status == 307 || response.status == 308){
-                jsonObj = {url : `${response.url}`, status: `${response.status}`}
-                jsonResponse.push(jsonObj)
-                console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
-            }else {
-                jsonObj = {url : `${response.url}`, status: `${response.status}`}
-                jsonResponse.push(jsonObj)
-                console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
-            }
-        }).catch(function (err) {
-            jsonObj = {url : `${url}`, status: "000"}
-            jsonResponse.push(jsonObj)
-            console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
-        })
+                console.log(JSON.stringify(jsonResponse))
 
-        if(argv.j){
-            console.log(JSON.stringify(jsonResponse))
-        }
-}
+            }else{
+                if (response.status == 400 || response.status == 404) {
+                    console.log(chalk.red.bold("Bad ===> " + response.status + " ===> " + response.url))
+                } else if (response.status == 200) {
+                    console.log(chalk.green.bold("Good ===> " + response.status + " ===> " + response.url))
+                } else if(response.status == 301 || response.status == 307 || response.status == 308){
+                    console.log(chalk.yellow.bold("Redirect ===> " + response.status + " ===> " + response.url))
+                }else {
+                    console.log(chalk.grey.bold("Unknown ===> " + response.status + " ===> " + response.url))
+                }
+            }
+                            
+        }).catch(function (err) {
+            if(!argv.j){
+                console.log(chalk.blue.bold("Not exist ===> 000 ===> " + url))
+            }
+            
+        })
+    }
+        
 
 // read each line of a file and call checkUrlandReport function
 function readFile(fileNames) {
