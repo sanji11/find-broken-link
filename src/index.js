@@ -5,12 +5,20 @@ const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
 const axios = require('axios');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const { Console } = require("console");
+const { resolve } = require("path");
 const v = require("../package.json").version; //getting version number
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
 const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
 var config //config file
+const PT1 = /\bhttps?::\/\/\S+/gi
+const PT2 = /\bhttps?:\/\/\S+/gi
+
+let ignoreURL = []
+let inputURL = []
+
 //to store the output
 var jsonObj = {
     "url": String,
@@ -74,11 +82,16 @@ const argv = require("yargs")
         alias: "json",
         describe: "Output the result into JSON format",
         type: "boolean",
+    })
+    .option("i", {
+        alias: "ignore",
+        describe: "Ignore URL feature",
+        type: "array",
     })   
    .check((argv) => {
        //check if the options is provided or argument with option is provided or not
         if ((argv.f && argv.f.length != 0) || (argv.a && argv.a.length != 0) || 
-        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0)) {
+        (argv.u && argv.u.length != 0) || (argv.d && argv.d.length != 0) || (argv.i && argv.i.length != 0)) {
             handleArg(argv)
             return true
         }
@@ -105,6 +118,10 @@ function handleArg(argv) {
                 }
             })
         }) 
+    }else if(argv.i) {
+        // Console.log(hahahahahahahahahah);
+        readFileIgnore(argv.i);
+
     }else if (argv.u) {
         argv.u.forEach(singleUrl=>{
             checkUrlAndReport(singleUrl)
@@ -150,7 +167,7 @@ function setDefaultConfig(){
 }
 //send http request and check the status
 function checkUrlAndReport(url) {
-      fetch(url, { method: "head", timeout: 13000, redirect : "manual"})
+      fetch(url, { method: "head", timeout: 5000, redirect : "manual"})
         .then(function (response) {
             if(!argv.j){
                 /*if resultType is empty or user does not follow the structure of the config file, set it to default*/
@@ -212,6 +229,43 @@ function readFile(fileNames) {
     })    
 }
 
+
+function readFileIgnore(fileNames) {
+    let ignoreFile = process.argv[3];
+    let urlFile = process.argv[4];
+
+    readF(ignoreFile).then(data => {
+        ignoreURL = getURLs(data);
+
+        readF(urlFile).then(data => {
+            inputURL = getURLs(data);
+        
+            inputURL = inputURL.filter( function( el ) {
+                return ignoreURL.indexOf( el ) < 0;
+            });
+
+            inputURL.forEach(url => {
+                checkUrlAndReport(url);
+            });    
+        });
+    });
+}
+
+
+function readF(filename) {
+    try {
+        if(fs.existsSync(filename)) { // check if file exist
+                return fs.promises.readFile(filename);
+        } else {
+            console.log('File not found!');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+
 //archived version from wayback machine url
 function archivedURL(url) {
     let bashed_url = encodeURIComponent(url, 26, true)
@@ -225,4 +279,24 @@ function archivedURL(url) {
             }
         })
         .catch(err => console.log(err))
+}
+
+function getURLs(data) {
+    let finalURLs = []
+    let tempArr = data.toString().split(/[({\\<"^`|>})]/)
+
+    for (let i = tempArr.length; i--;) {
+        let tmp = (tempArr[i].match(PT1) || tempArr[i].match(PT2)) != null ?
+            tempArr[i].match(PT1) || tempArr[i].match(PT2) : ""
+
+        if (tmp.length === 1) {
+            if (tmp !== "") finalURLs.push(tmp[0])
+        } else {
+            for (let i = tmp.length; i--;) {
+                finalURLs.push(tmp[i])
+            }
+        }
+    }
+    finalURLs = [...new Set(finalURLs)]
+    return finalURLs
 }
