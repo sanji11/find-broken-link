@@ -3,16 +3,15 @@
 const chalk = require("chalk"); //to color the output
 const lineReader = require('line-reader'); // to read line one by one
 const fetch = require("node-fetch"); // to send request and get response
-const axios = require('axios');
+const util = require('./util.js')
 const fs = require('fs');
 const path = require('path')
-const v = require("../package.json").version; //getting version number
+const version = require('./version.js')
 // to match url with http and https
 const regex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
-const versionDetails = chalk.yellow(`fbl version: ${v}`); //setting version number
 var config //config file
 //to store the output
-var jsonObj = {
+var urlDetails = {
     "url": String,
     "status": Number
 }
@@ -85,7 +84,7 @@ const argv = require("yargs")
         throw new Error(chalk.red.bold('At least one option/argument is required!'))        
     })
     .alias('v', 'version')
-    .version(`${versionDetails}`)
+    .version(chalk.yellow(`${version.getVersion()}`))
     .alias('h', 'help')
     .epilog("copyright 2020")
     .argv;
@@ -111,7 +110,7 @@ function handleArg(argv) {
         })    
     }else if (argv.a) {
         argv.a.forEach(singleUrl=>{
-            archivedURL(singleUrl)
+            util.archivedURL(singleUrl)
         })  
     }else if(argv.v){
         console.log(chalk.red.bold(`Current Version Number: {$v}`))
@@ -187,11 +186,11 @@ function checkUrlAndReport(url) {
         
 }
  function storeJsonDataAndPrint(url, status){
-    jsonObj.url = url
-    jsonObj.status = status
-    console.log(jsonObj)
+    urlDetails.url = url
+    urlDetails.status = status
+    console.log(urlDetails)
 
- }       
+ }      
 
 // read each line of a file and call checkUrlandReport function
 function readFile(fileNames) {
@@ -212,17 +211,3 @@ function readFile(fileNames) {
     })    
 }
 
-//archived version from wayback machine url
-function archivedURL(url) {
-    let bashed_url = encodeURIComponent(url, 26, true)
-    axios.get(`http://archive.org/wayback/available?url=${bashed_url}`)
-        .then(response => {
-            if (response.data.archived_snapshots.length == 0) {
-                console.log(`There is no archived version available for ${url}`)
-            }
-            else {
-                console.log((`Check out the archived version at `) + chalk.green.bold(`${response.data.archived_snapshots.closest.url}`))
-            }
-        })
-        .catch(err => console.log(err))
-}
