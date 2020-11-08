@@ -16,8 +16,8 @@ This is a command line tool designed to report broken link and their status, suc
 * Find broken links for one or more file in one or more directory
 * Find broken links directly from one or more URL
 * Find archvied version of link directly from one or more URL
-* Accepts configuration file for customizing result (good, bad, all links)
-* Print the output in JSON format
+* Accepts configuration file for customizing result (good, bad, all links) and report format (JSON)
+* Check the links in the last 10 posts indexed by your local Telescope
 
 ## Installation
 
@@ -69,13 +69,13 @@ $ fbl -c [path to Config file] <another option>
 ```
 The Config file must be a valid json with following structure:
 
-{"resultType" : "[type]"} where type can be `good` or `bad` or `all`. You can change the resultType while testing.
-
-To print output in JSON:
-
-```sh
-$ fbl -j <another option>
 ```
+{
+    "resultType" : "[type]",
+    "isJsonFormat" : boolean
+}
+```
+ where type can be `good` or `bad` or `all` and isJsonFormat is boolean : `true` or `false`. You can change the resultType and isJsonFormat while testing.
 
 ### Options
 
@@ -84,7 +84,7 @@ $ fbl -j <another option>
 * `-u`, `--url`: one or more URL you want to check for broken link
 * `-a`, `--archived`: one or more URL you want to check for archived version
 * `-c`, `--config`: uses the configuartion from specified file
-* `-j`, `--json` : prints output in JSON
+* `-t`, `--telescope` : Check the links in the last 10 posts indexed by your local Telescope
 * `-v`, `--version`: prints current version number of the CLI with tool name
 * `-h`, `--help`: prints the options available for the CLI with the example of how to use it
 
