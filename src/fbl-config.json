@@ -1,1 +1,4 @@
-{"resultType" : "good"}
+{
+    "resultType" : "bad",
+    "isJsonFromat" : false
+}
