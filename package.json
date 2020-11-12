@@ -7,8 +7,17 @@
     "fbl": "./src/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write \"./**/*.{md,jsx,json,html,css,js,yml}\"",
+    "prettier-check": "prettier --check \"./**/*.{md,jsx,json,html,css,js,yml}\"",
+    "eslint": "eslint --ignore-path .gitignore .",
+    "eslint-fix": "eslint --fix --ignore-path .gitignore .",
+    "lint": "npm run eslint"
   },
+  "pre-commit": [
+    "prettier",
+    "eslint"
+  ],
   "author": "Sanjida Afrin",
   "license": "ISC",
   "dependencies": {
@@ -21,5 +30,13 @@
     "readline": "^1.3.0",
     "tmp": "^0.2.1",
     "yargs": "^16.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "pre-commit": "^1.2.2",
+    "prettier": "2.1.2"
   }
 }
