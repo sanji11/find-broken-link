@@ -11,10 +11,6 @@ const regex = new RegExp(
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g
 );
 let config; // config file
-const urlDetails = {
-  url: String,
-  status: Number,
-};
 
 function setDefaultConfig() {
   config = {
@@ -23,14 +19,18 @@ function setDefaultConfig() {
   };
 }
 
-function storeJsonDataAndPrint(url, status) {
+function storeJsonData(url, status) {
+  const urlDetails = {
+    url: String,
+    status: Number,
+  };
   urlDetails.url = url;
   urlDetails.status = status;
-  console.log(urlDetails);
+  return urlDetails;
 }
 
-function checkUrlAndReport(url) {
-  fetch(url, { method: 'head', timeout: 13000, redirect: 'manual' })
+async function checkUrlAndReport(url) {
+  await fetch(url, { method: 'head', timeout: 13000, redirect: 'manual' })
     .then((response) => {
       if (config.isJsonFormat === false) {
         if (
@@ -53,7 +53,7 @@ function checkUrlAndReport(url) {
         }
       } else {
         // output in JSON
-        storeJsonDataAndPrint(response.url, response.status);
+        console.log(storeJsonData(response.url, response.status));
       }
     })
     .catch(() => {
@@ -63,7 +63,7 @@ function checkUrlAndReport(url) {
         }
       } else {
         // output in JSON
-        storeJsonDataAndPrint(url, '000');
+        console.log(storeJsonData(url, '000'));
       }
     });
 }
@@ -167,7 +167,7 @@ module.exports.archivedURL = archivedURL;
 module.exports.readFile = readFile;
 module.exports.readDir = readDir;
 module.exports.setDefaultConfig = setDefaultConfig;
-module.exports.storeJsonDataAndPrint = storeJsonDataAndPrint;
+module.exports.storeJsonData = storeJsonData;
 module.exports.checkUrlAndReport = checkUrlAndReport;
 module.exports.manageConfiguration = manageConfiguration;
 module.exports.handleTelescope = handleTelescope;
