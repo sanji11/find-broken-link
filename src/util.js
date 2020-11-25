@@ -19,7 +19,7 @@ const urlDetails = {
 function setDefaultConfig() {
   config = {
     resultType: 'all',
-    isJsonFromat: false,
+    isJsonFormat: false,
   };
 }
 
@@ -32,7 +32,7 @@ function storeJsonDataAndPrint(url, status) {
 function checkUrlAndReport(url) {
   fetch(url, { method: 'head', timeout: 13000, redirect: 'manual' })
     .then((response) => {
-      if (config.isJsonFromat === false) {
+      if (config.isJsonFormat === false) {
         if (
           (config.resultType === 'all' || config.resultType === 'bad') &&
           (response.status === 400 || response.status === 404)
@@ -57,7 +57,7 @@ function checkUrlAndReport(url) {
       }
     })
     .catch(() => {
-      if (config.isJsonFromat === false) {
+      if (config.isJsonFormat === false) {
         if (config.resultType === 'all') {
           console.log(chalk.blue.bold(`Not exist ===> 000 ===> ${url}`));
         }
@@ -68,11 +68,11 @@ function checkUrlAndReport(url) {
     });
 }
 
-// read each line of a file and call checkUrlandReport function
+// read each line of a file and call checkUrl and Report function
 function readFile(fileNames) {
   fileNames.forEach((file) => {
     lineReader.eachLine(file, (line) => {
-      // find if any line conatins url with http and https
+      // find if any line contains url with http and https
       const matchArray = line.match(regex);
       if (matchArray != null) {
         // remove duplicates
@@ -122,7 +122,7 @@ function manageConfiguration(configFile) {
   }
 }
 
-// archived version from wayback machine url
+// archived version from way back machine url
 function archivedURL(url) {
   const bashedUrl = encodeURIComponent(url, 26, true);
   axios
@@ -141,7 +141,7 @@ function archivedURL(url) {
     .catch((err) => console.log(err));
 }
 // Check the links in the last 10 posts indexed by your local Telescope
-async function handleTelsescope() {
+async function handleTelescope() {
   const finalArray = [];
 
   const posts = await fetch('http://localhost:3000/posts').then((response) => response.json());
@@ -151,11 +151,11 @@ async function handleTelsescope() {
         .then((response) => response.json())
         .then((data) => data.html)
         .then((postContent) => {
-          const tmpobj = tmp.fileSync();
-          fs.appendFile(tmpobj.name, postContent, (err) => {
+          const tmpObj = tmp.fileSync();
+          fs.appendFile(tmpObj.name, postContent, (err) => {
             if (err) throw err;
           });
-          return tmpobj.name;
+          return tmpObj.name;
         })
     );
   });
@@ -170,4 +170,4 @@ module.exports.setDefaultConfig = setDefaultConfig;
 module.exports.storeJsonDataAndPrint = storeJsonDataAndPrint;
 module.exports.checkUrlAndReport = checkUrlAndReport;
 module.exports.manageConfiguration = manageConfiguration;
-module.exports.handleTelsescope = handleTelsescope;
+module.exports.handleTelescope = handleTelescope;
