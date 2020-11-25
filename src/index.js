@@ -27,10 +27,10 @@ function handleArg(args) {
   } else if (args.v) {
     console.log(chalk.red.bold('Current Version Number: {$v}'));
   } else if (args.t) {
-    util.handleTelsescope();
+    util.handleTelescope();
   }
 }
-// set the arguement
+// set the argument
 
 /* eslint-disable no-unused-expressions */
 argv
