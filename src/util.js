@@ -12,10 +12,10 @@ const regex = new RegExp(
 );
 let config; // config file
 
-function setDefaultConfig() {
+function setDefaultConfig(result = 'all', format = false) {
   config = {
-    resultType: 'all',
-    isJsonFormat: false,
+    resultType: result,
+    isJsonFormat: format,
   };
 }
 

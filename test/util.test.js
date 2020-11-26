@@ -34,7 +34,7 @@ describe('checkUrlAndReport test', () => {
   }
 
   beforeEach(() => {
-    setDefaultConfig();
+    // setDefaultConfig();
     global.console.log = testLogFn;
     global.console.error = testErrorFn;
 
@@ -49,32 +49,52 @@ describe('checkUrlAndReport test', () => {
     logOutput = null;
     errorOutput = null;
   });
+  // test for config type
+  test('config result type good should only displays good URL', async () => {
+    setDefaultConfig('good');
+    await checkUrlAndReport('https://medium.com/');
+    const expected = chalk.green.bold(`Good ===> 200 ===> https://medium.com/`);
+    expect(finalize(logOutput)).toEqual(expected);
+    expect(finalize(errorOutput)).toBe(null);
+  });
+  test('config result type bad should only displays bad URL', async () => {
+    setDefaultConfig('bad');
+    await checkUrlAndReport('http://gogle.ca');
+    const expected = chalk.red.bold(`Bad ===> 404 ===> http://gogle.ca/`);
+    expect(finalize(logOutput)).toEqual(expected);
+    expect(finalize(errorOutput)).toBe(null);
+  });
   // test for output color
   test('url with status 200 prints in green', async () => {
+    setDefaultConfig(); // when no parameter passed, default is: resultType: 'all', isJsonFormat: false
     await checkUrlAndReport('https://medium.com/');
     const expected = chalk.green.bold(`Good ===> 200 ===> https://medium.com/`);
     expect(finalize(logOutput)).toEqual(expected);
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url with status 400 or 404 prints in red', async () => {
+    setDefaultConfig();
     await checkUrlAndReport('http://gogle.ca');
     const expected = chalk.red.bold(`Bad ===> 404 ===> http://gogle.ca/`);
     expect(finalize(logOutput)).toEqual(expected);
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url with status 301 or 307 or 308 prints in yellow', async () => {
+    setDefaultConfig();
     await checkUrlAndReport('http://abc.com');
     const expected = chalk.yellow.bold(`Redirect ===> 301 ===> http://abc.com/`);
     expect(finalize(logOutput)).toEqual(expected);
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url with status 000 prints in blue', async () => {
+    setDefaultConfig();
     await checkUrlAndReport('http://go0gle.ca');
     const expected = chalk.blue.bold(`Not exist ===> 000 ===> http://go0gle.ca`);
     expect(finalize(logOutput)).toEqual(expected);
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url other than above status prints in grey', async () => {
+    setDefaultConfig();
     await checkUrlAndReport('http://stronglytyped.ca/category/spo600/feed/');
     const expected = chalk.grey.bold(
       `Unknown ===> 500 ===> http://stronglytyped.ca/category/spo600/feed/`
@@ -84,6 +104,7 @@ describe('checkUrlAndReport test', () => {
   });
   // test for status code
   test('url should return 200 status code and should be considered as good', async () => {
+    setDefaultConfig();
     nock('https://medium.com').head('/').reply(200);
     await checkUrlAndReport('https://medium.com/');
     const expected = chalk.green.bold(`Good ===> 200 ===> https://medium.com/`);
@@ -91,6 +112,7 @@ describe('checkUrlAndReport test', () => {
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url should return 400 or 404 status code and should be considered as bad', async () => {
+    setDefaultConfig();
     nock('http://gogle.ca').head('/').reply(404);
     await checkUrlAndReport('http://gogle.ca');
     const expected = chalk.red.bold(`Bad ===> 404 ===> http://gogle.ca/`);
@@ -98,6 +120,7 @@ describe('checkUrlAndReport test', () => {
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url should return 301 or 307 or 308 status code and should be considered as redirect', async () => {
+    setDefaultConfig();
     nock('http://abc.com').head('/').reply(301);
     await checkUrlAndReport('http://abc.com');
     const expected = chalk.yellow.bold(`Redirect ===> 301 ===> http://abc.com/`);
@@ -105,6 +128,7 @@ describe('checkUrlAndReport test', () => {
     expect(finalize(errorOutput)).toBe(null);
   });
   test('url should return other status code and should be considered as Unknown', async () => {
+    setDefaultConfig();
     nock('http://stronglytyped.ca/category/spo600/feed/').head('/').reply(500);
     await checkUrlAndReport('http://stronglytyped.ca/category/spo600/feed/');
     const expected = chalk.grey.bold(
