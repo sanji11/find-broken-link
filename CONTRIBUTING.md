@@ -66,3 +66,33 @@ For more information, check [prettier documentation on editor configuration.](ht
 ### Eslint Extension Installion:
 
 To install the extension, [go to the following link](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and press "Install"
+
+## Run Test Framework
+
+To run test, run the following command:
+
+```sh
+$ npm run test
+```
+
+## Run Coverage Tool
+
+To generate code coverage for current tests, run the following command:
+
+```sh
+$ npm run coverage
+```
+
+You can check the coverage report in browser by running following command:
+
+```sh
+$ open coverage/lcov-report/index.html
+```
+
+## Rules for Writing Test
+
+There are many more tests needed for this CLI. Your contribution in writing tests will be greatly appreciated. Some simple rule to follow:
+
+- write tests inside test folder
+- tests are divided by .js file. If you are writing test for a function in util.js, you should write the test in corresponding test files which is util.test.js
+- each function's test should be in their own describe scope
