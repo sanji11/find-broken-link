@@ -1,6 +1,11 @@
 const chalk = require('chalk');
 const nock = require('nock');
-const { storeJsonData, checkUrlAndReport, setDefaultConfig } = require('../src/util');
+const {
+  storeJsonData,
+  checkUrlAndReport,
+  setDefaultConfig,
+  manageConfiguration,
+} = require('../src/util');
 
 const originalConsoleLogFn = global.console.log;
 const originalConsoleErrorFn = global.console.error;
@@ -133,6 +138,55 @@ describe('checkUrlAndReport test', () => {
     await checkUrlAndReport('http://stronglytyped.ca/category/spo600/feed/');
     const expected = chalk.grey.bold(
       `Unknown ===> 500 ===> http://stronglytyped.ca/category/spo600/feed/`
+    );
+    expect(finalize(logOutput)).toEqual(expected);
+    expect(finalize(errorOutput)).toBe(null);
+  });
+});
+
+describe('manageConfiguration test', () => {
+  let logOutput = null;
+  let errorOutput = null;
+
+  function testLogFn(...args) {
+    logOutput = logOutput || [];
+    args.forEach((arg) => logOutput.push(arg));
+  }
+
+  function testErrorFn(...args) {
+    errorOutput = errorOutput || [];
+    args.forEach((arg) => errorOutput.push(arg));
+  }
+
+  function finalize(output) {
+    if (output && Array.isArray(output)) {
+      return output.join('');
+    }
+    return output;
+  }
+
+  beforeEach(() => {
+    // setDefaultConfig();
+    global.console.log = testLogFn;
+    global.console.error = testErrorFn;
+
+    logOutput = null;
+    errorOutput = null;
+  });
+
+  afterEach(() => {
+    global.console.log = originalConsoleLogFn;
+    global.console.error = originalConsoleErrorFn;
+
+    logOutput = null;
+    errorOutput = null;
+  });
+
+  test('configure file is empty', () => {
+    const configFile = '';
+    manageConfiguration(configFile);
+    const expected = chalk.bgMagentaBright.bold(
+      ' Config file does not exist; Using default config. '
     );
     expect(finalize(logOutput)).toEqual(expected);
     expect(finalize(errorOutput)).toBe(null);
