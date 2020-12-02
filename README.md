@@ -2,6 +2,14 @@
 
 This is a command line tool designed to report broken link and their status, such as good, bad, redirect, unknown and not exist.
 
+To install fbl,
+
+```sh
+$ npm i findbrokenurl
+```
+
+Now, you can run `npx fbl` with any available options from your project.
+
 ## Feature
 
 ![fbl](./fbl_cmd.PNG)
